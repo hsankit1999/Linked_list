@@ -58,24 +58,57 @@ class linked_list:
             if fut!=None: fut=fut.next
         self.head=prev
 
-    def circular(self):
+    def makeloop(self,pos):             #connect last element with element at offset
         
         temp=self.head
         for i in range(2,self.size+1):
             temp=temp.next
-                
-        temp.next=self.head
 
-    def isCircular(self):
-        temp=self.head
-        if temp==None:
-            return True
-        while temp:
-            if temp.next==self.head:
-                return True
-            temp=temp.next
+        temp2=self.head
+        for i in range(1,pos):
+            temp2=temp2.next
+        temp.next=temp2
+
+    def isloop(self):                       #return true if there is a loop
+        slow=self.head
+        fast=self.head
+        while slow and fast and fast.next:
+            slow=slow.next
+            fast=fast.next.next
+            if slow==fast: return True
         return False
 
+    def LAF_loop(self):                     #return tuple of last and first element of loop
+        slow=self.head
+        fast=self.head
+        isloop=False
+        while slow and fast and fast.next:
+            slow=slow.next
+            fast=fast.next.next
+            if slow==fast:
+                isloop=True
+                break
+
+        if isloop:
+            slow=self.head
+            while 1:
+                if slow.next==fast.next:
+                   return (fast,slow.next)
+                slow=slow.next
+                fast=fast.next
+        else:
+            return ((),())
+        
+    def removeloop(self):               #remove loop
+        (last,slow)=self.LAF_loop()
+        print(last)
+        if(last==()):
+            print("removeloop: No loop")
+            return
+        last.next=None
+        
+        
+    
     def display(self):
         temp=self.head
         while(temp):
@@ -91,6 +124,8 @@ class linked_list:
             return
         self.printRev(temp.next)
         print(temp.data,end=" ")
+
+    
          
             
         
